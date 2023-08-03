@@ -50,6 +50,10 @@ BOOL CRemoteClientApp::InitInstance()
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
+
+	const char* lstr = "hello";
+
+
 	CWinApp::InitInstance();
 
 
