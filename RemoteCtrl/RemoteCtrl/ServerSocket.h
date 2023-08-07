@@ -1,6 +1,30 @@
 #pragma once
 #include "pch.h"
 #include "framework.h"
+
+class CPacket {
+public:
+	CPacket():sHead(0),nLength(0),sCmd(0),sSum(0){}
+	CPacket(const BYTE* pData, size_t& nsize):sHead(0), nLength(0), sCmd(0), sSum(0) {
+		size_t i = 0;
+		for (; i < nsize; i++) {
+			if (*(WORD*)(pData + i) == 0xFEFF) {
+				sHead = *(WORD*)(pData + i);
+				break;
+			}
+		}
+		if (i >= nsize) {
+			return;
+		}
+	}
+	~CPacket(){}
+private:
+	WORD sHead;//包头，固定位FEFF
+	DWORD nLength;//包长度（从控制命令开始到和校验结束）
+	WORD sCmd;//控制命令
+	std::string strData;//包数据
+	WORD sSum;//和校验
+};
 class CServerSocket
 {
 public:
@@ -32,7 +56,8 @@ public:
 	}
 	int  DealCommand() {
 		if (m_client == -1)return false;
-		char buffer[1024] = "";
+		char* buffer = new char[4096];
+		memset(buffer, 0, 4096);
 		while (true) {
 			int len= recv(m_client, buffer, sizeof(buffer), 0);
 			if (len <= 0) {
