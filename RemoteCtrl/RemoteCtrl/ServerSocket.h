@@ -5,6 +5,17 @@
 class CPacket {
 public:
 	CPacket():sHead(0),nLength(0),sCmd(0),sSum(0){}
+	CPacket(WORD nCmd, const BYTE* pData, size_t nsize) {
+		sHead = 0xFEFF;
+		nLength = nsize + 4;
+		sCmd = nCmd;
+		strData.resize(nsize);
+		memcpy((void*)strData.c_str(), pData, nsize);
+		sSum = 0;
+		for (size_t j = 0; j < strData.size(); j++) {
+			sSum += BYTE(strData[j]) & 0XFF;
+		}
+	}
 	CPacket(const CPacket& packet) {
 		sHead = packet.sHead;
 		nLength = packet.nLength;
@@ -39,7 +50,7 @@ public:
 		sSum = *(DWORD*)(pData + i); i += 2;
 		WORD sum;
 		for (size_t j = 0; j < strData.size(); j++) {
-			sum += BYTE(strData[j]) & 0XFF;
+			sum += BYTE(strData[j]) & 0xFF;
 		}
 		if (sum == sSum) {
 			nsize = i;
@@ -58,13 +69,30 @@ public:
 		}
 		return *this;
 	}
+	int Size() {//包数据的大小
+		return nLength + 6;
+	}
+	const char* Data() {
+		strOut.resize(nLength + 6);
+		BYTE* pData = (BYTE*)strOut.c_str();
+		*(WORD*)pData = sHead; pData += 2;
+		*(DWORD*)(pData) = nLength; pData += 4;
+		*(WORD*)pData = sCmd; pData += 2;
+		memcpy((void*)(pData), strData.c_str(), strData.size()); pData += strData.size();
+		*(WORD*)pData = sSum;
+		return strOut.c_str();
+	}
+
 public:
 	WORD sHead;//包头，固定位FEFF
 	DWORD nLength;//包长度（从控制命令开始到和校验结束）
 	WORD sCmd;//控制命令
 	std::string strData;//包数据
 	WORD sSum;//和校验
+	std::string strOut;//整个包的数据
 };
+
+
 class CServerSocket
 {
 public:
@@ -118,7 +146,11 @@ public:
 	}
 	bool Send(const char* pData, int nsize) {
 		if (m_client == -1)return false;
-		return send(m_client, pData, nsize, 0)>=0;
+		return send(m_client, pData, nsize, 0)>0;
+	}
+	bool Send(CPacket& pack) {
+		if (m_client == -1)return false;
+		return send(m_client,pack.Data(), pack.Size(), 0) > 0;
 	}
 private:
 	SOCKET m_sock;
