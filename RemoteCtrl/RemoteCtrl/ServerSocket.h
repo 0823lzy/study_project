@@ -7,7 +7,7 @@ public:
 	CPacket():sHead(0),nLength(0),sCmd(0),sSum(0){}
 	CPacket(WORD nCmd, const BYTE* pData, size_t nsize) {
 		sHead = 0xFEFF;
-		nLength = nsize + 4;
+		nLength =(DWORD)nsize + 4;
 		sCmd = nCmd;
 		strData.resize(nsize);
 		memcpy((void*)strData.c_str(), pData, nsize);
@@ -47,7 +47,7 @@ public:
 			memcpy((void*)strData.c_str(), pData + i, nLength - 4);
 			i += nLength - 4;
 		}
-		sSum = *(DWORD*)(pData + i); i += 2;
+		sSum = *(WORD*)(pData + i); i += 2;
 		WORD sum;
 		for (size_t j = 0; j < strData.size(); j++) {
 			sum += BYTE(strData[j]) & 0xFF;
@@ -151,6 +151,13 @@ public:
 	bool Send(CPacket& pack) {
 		if (m_client == -1)return false;
 		return send(m_client,pack.Data(), pack.Size(), 0) > 0;
+	}
+	bool GetFilePath(std::string& strPath) {
+		if (m_packet.sCmd == 2) {
+			strPath = m_packet.strData;
+			return true;
+		}
+		return false;
 	}
 private:
 	SOCKET m_sock;
