@@ -97,7 +97,17 @@ public:
 	std::string strOut;//整个包的数据
 };
 
-
+typedef struct MouseEvent{//关于鼠标一系列行为的结构体
+	MouseEvent() {
+		nAction = 0;
+		nButton = -1;
+		ptXY.x = 0;
+		ptXY.y = 0;
+	}
+	WORD nAction;//鼠标的动作，点击，移动，双击
+	WORD nButton;//鼠标的左键，右键，中间键
+	POINT ptXY;//坐标
+}MOUSEEV,*PMOUSEEV;
 class CServerSocket
 {
 public:
@@ -161,6 +171,13 @@ public:
 		if ((m_packet.sCmd >= 2) && (m_packet.sCmd <= 4)) {
 			strPath = m_packet.strData;
 			return true;
+		}
+		return false;
+	}
+	bool GetMouseEvent(MOUSEEV& mouse) {
+		if (m_packet.sCmd == 5) {
+			memcpy(&mouse, m_packet.strData.c_str(), sizeof(MOUSEEV));
+			return TRUE;
 		}
 		return false;
 	}
