@@ -53,7 +53,7 @@ public:
 			i += nLength - 4;
 		}
 		sSum = *(WORD*)(pData + i); i += 2;
-		WORD sum;
+		WORD sum=0;
 		for (size_t j = 0; j < strData.size(); j++) {
 			sum += BYTE(strData[j]) & 0xFF;
 		}
@@ -144,7 +144,7 @@ public:
 		memset(buffer, 0, BUFFER_SIZE);
 		size_t index = 0;
 		while (true) {
-			size_t len= recv(m_client, buffer+index, BUFFER_SIZE -index, 0);
+			size_t len = recv(m_client, buffer+index, BUFFER_SIZE -(int)index, 0);
 			if (len <= 0) {
 				return -1;
 			}

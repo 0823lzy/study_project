@@ -7,6 +7,7 @@
 #include"ServerSocket.h"
 #include<direct.h>
 #include<list>
+#include<atlimage.h>
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -221,6 +222,44 @@ int MouseEvent() {
     }
     return 0;
 }
+int SendScreen() {
+    CImage screen;//图形图像 GDI
+    HDC hScreen=::GetDC(NULL);//获取设备上下文(屏幕句柄)
+    int nBitPerPixel = GetDeviceCaps(hScreen, BITSPIXEL);//获取设备的多个属性,返回的是用多少个bit来表示颜色(位宽)
+    int nWidth = GetDeviceCaps(hScreen, HORZRES);//获取设备的宽，水平宽度
+    int nHeight = GetDeviceCaps(hScreen, VERTRES);//获取设备的高，垂直高度
+    screen.Create(nWidth, nHeight, nBitPerPixel);//创建图像
+
+    //BitBlt函数将hScreen的位图数据按照指定的方式传输到screen上。
+    BitBlt(screen.GetDC(), 0, 0, 1920, 1020, hScreen, 0, 0, SRCCOPY);//复制图像
+    ReleaseDC(NULL, hScreen);//释放
+
+    //GlobalAlloc 是一个 Windows API 函数，用于在全局堆（Global Heap）中分配指定大小的内存块。它返回一个全局内存块的句柄。
+    HGLOBAL hMem= GlobalAlloc(GMEM_MOVEABLE, 0);
+    if (hMem == NULL) return -1;
+    IStream* pStream = NULL;//流
+    HRESULT ret= CreateStreamOnHGlobal(hMem, TRUE, &pStream);
+    if (ret == S_OK) {
+        screen.Save(pStream, Gdiplus::ImageFormatPNG);//以PNG格式保存到内存流里
+        LARGE_INTEGER bg = { 0 };
+        pStream->Seek(bg, STREAM_SEEK_SET, NULL);
+        PBYTE pData=(PBYTE)GlobalLock(hMem);//锁定内存
+        size_t nSize = GlobalSize(hMem);
+        CPacket pack(6, pData, nSize);
+        CServerSocket::getInstance()->Send(pack);
+        GlobalUnlock(hMem);
+    }
+    pStream->Release();
+    GlobalFree(hMem);
+    //screen.Save(_T("test2023.png"), Gdiplus::ImageFormatPNG);//以PNG格式保存
+
+   //DWORD tick = GetTickCount64();//获取时间
+    //screen.Save(_T("test2023.jpg"), Gdiplus::ImageFormatJPEG);//以JPEG格式保存
+    //TRACE("jpg %d\r\n", GetTickCount64() - tick);//获取jpg制作时间
+
+    screen.ReleaseDC();
+    return 0;
+}
 int main()
 {
     int nRetCode = 0;
@@ -258,7 +297,7 @@ int main()
             //    int ret = pserver->DealCommand();
             //    //TODO:
             //}
-            int nCmd = 1;
+            int nCmd = 6;
             switch (nCmd)
             {
             case 1://查看磁盘分区
@@ -275,6 +314,9 @@ int main()
                 break;
             case 5://鼠标操作
                 MouseEvent();
+                break;
+            case 6://发送屏幕内容==>发送屏幕的截图
+                SendScreen();
                 break;
             default:
                 break;
