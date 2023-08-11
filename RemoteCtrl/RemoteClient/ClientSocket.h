@@ -1,14 +1,15 @@
 #pragma once
 #include "pch.h"
 #include "framework.h"
+#include<string>
 #pragma pack(push)
 #pragma pack(1)
 class CPacket {
 public:
-	CPacket():sHead(0),nLength(0),sCmd(0),sSum(0){}
+	CPacket() :sHead(0), nLength(0), sCmd(0), sSum(0) {}
 	CPacket(WORD nCmd, const BYTE* pData, size_t nsize) {
 		sHead = 0xFEFF;
-		nLength =(DWORD)nsize + 4;
+		nLength = (DWORD)nsize + 4;
 		sCmd = nCmd;
 		if (nsize > 0) {
 			strData.resize(nsize);
@@ -29,7 +30,7 @@ public:
 		strData = packet.strData;
 		sSum = packet.sSum;
 	}
-	CPacket(const BYTE* pData, size_t& nsize):sHead(0), nLength(0), sCmd(0), sSum(0) {
+	CPacket(const BYTE* pData, size_t& nsize) :sHead(0), nLength(0), sCmd(0), sSum(0) {
 		size_t i = 0;
 		for (; i < nsize; i++) {
 			if (*(WORD*)(pData + i) == 0xFEFF) {
@@ -38,7 +39,7 @@ public:
 				break;
 			}
 		}
-		if (i +4+2+2> nsize) {//包数据可能不全，或者包头未能全部接收到
+		if (i + 4 + 2 + 2 > nsize) {//包数据可能不全，或者包头未能全部接收到
 			nsize = 0;
 			return;
 		}
@@ -54,7 +55,7 @@ public:
 			i += nLength - 4;
 		}
 		sSum = *(WORD*)(pData + i); i += 2;
-		WORD sum=0;
+		WORD sum = 0;
 		for (size_t j = 0; j < strData.size(); j++) {
 			sum += BYTE(strData[j]) & 0xFF;
 		}
@@ -64,9 +65,9 @@ public:
 		}
 		nsize = 0;
 	}
-	~CPacket(){}
+	~CPacket() {}
 	CPacket operator=(const CPacket& packet) {
-		if (this!=&packet) {
+		if (this != &packet) {
 			sHead = packet.sHead;
 			nLength = packet.nLength;
 			sCmd = packet.sCmd;
@@ -98,7 +99,7 @@ public:
 	std::string strOut;//整个包的数据
 };
 #pragma pack(pop)
-typedef struct MouseEvent{//关于鼠标一系列行为的结构体
+typedef struct MouseEvent {//关于鼠标一系列行为的结构体
 	MouseEvent() {
 		nAction = 0;
 		nButton = -1;
@@ -108,50 +109,68 @@ typedef struct MouseEvent{//关于鼠标一系列行为的结构体
 	WORD nAction;//鼠标的动作，点击，移动，双击
 	WORD nButton;//鼠标的左键，右键，中间键
 	POINT ptXY;//坐标
-}MOUSEEV,*PMOUSEEV;
-class CServerSocket
+}MOUSEEV, * PMOUSEEV;
+
+std::string GetErrorInfo(int wsaErrCode) {//错误信息返回函数
+	std::string ret;
+	LPVOID lpMsgBuf = NULL;
+	FormatMessage(
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,//从系统拿到消息，并创建一个缓冲区
+		NULL,
+		wsaErrCode,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf,
+		0,
+		NULL
+	);
+	ret = (char*)lpMsgBuf;
+	LocalFree(lpMsgBuf);
+	return ret;
+}
+class CClientSocket
 {
 public:
-	static CServerSocket* getInstance() {
+	static CClientSocket* getInstance() {
 		if (m_instance == NULL) {
-			m_instance = new CServerSocket();
+			m_instance = new CClientSocket();
 		}
 		return m_instance;
 	}
-	bool InitSocket() {
-		
+	bool InitSocket(const std::string&strIPAddress) {
+
 		if (m_sock == -1) return false;
 		sockaddr_in servaddr;
 		memset(&servaddr, 0, sizeof(servaddr));
 		servaddr.sin_family = AF_INET;
-		servaddr.sin_addr.s_addr = INADDR_ANY;
+		servaddr.sin_addr.s_addr = inet_addr(strIPAddress.c_str());
 		servaddr.sin_port = htons(9527);
-		//绑定 
-		if (bind(m_sock, (sockaddr*)&servaddr, sizeof(servaddr)) == -1) return false;
-		if (listen(m_sock, 1) == -1) return false;
-		return true;
-	} 
-	bool AcceptClient() {
-		sockaddr_in clntaddr;
-		int clntlen = sizeof(clntaddr);
-		m_client = accept(m_sock, (sockaddr*)&clntaddr, &clntlen);
-		if (m_client == -1)return false;
+		if (servaddr.sin_addr.s_addr == INADDR_NONE) {
+			AfxMessageBox("指定的ip地址不存在！");
+			return false;
+		}
+		int ret = connect(m_sock, (sockaddr*)&servaddr, sizeof(servaddr));
+		if (ret == -1) {
+			AfxMessageBox("连接失败！");
+			TRACE("连接失败，%d%s\r\n", WSAGetLastError(), GetErrorInfo(WSAGetLastError()).c_str());
+			return false;
+		}
 		return true;
 	}
+	
 #define BUFFER_SIZE 4096
 	int  DealCommand() {
-		if (m_client == -1)return -1;
+		if (m_sock == -1)return -1;
 		char* buffer = new char[BUFFER_SIZE];
 		memset(buffer, 0, BUFFER_SIZE);
 		size_t index = 0;
 		while (true) {
-			size_t len = recv(m_client, buffer+index, BUFFER_SIZE -(int)index, 0);
+			size_t len = recv(m_sock, buffer + index, BUFFER_SIZE - (int)index, 0);
 			if (len <= 0) {
 				return -1;
 			}
 			index += len;
 			len = index;
-			m_packet=CPacket((BYTE*)buffer, len);
+			m_packet = CPacket((BYTE*)buffer, len);
 			if (len > 0) {
 				memmove(buffer, buffer + len, BUFFER_SIZE - len);
 				index -= len;
@@ -161,12 +180,12 @@ public:
 		return -1;
 	}
 	bool Send(const char* pData, int nsize) {
-		if (m_client == -1)return false;
-		return send(m_client, pData, nsize, 0)>0;
+		if (m_sock == -1)return false;
+		return send(m_sock, pData, nsize, 0) > 0;
 	}
 	bool Send(CPacket& pack) {
-		if (m_client == -1)return false;
-		return send(m_client,pack.Data(), pack.Size(), 0) > 0;
+		if (m_sock == -1)return false;
+		return send(m_sock, pack.Data(), pack.Size(), 0) > 0;
 	}
 	bool GetFilePath(std::string& strPath) {
 		if ((m_packet.sCmd >= 2) && (m_packet.sCmd <= 4)) {
@@ -184,21 +203,19 @@ public:
 	}
 private:
 	SOCKET m_sock;
-	SOCKET m_client;
 	CPacket m_packet;
-	CServerSocket& operator=(const CServerSocket&ss) {}
-	CServerSocket(const CServerSocket&ss) {
+	CClientSocket& operator=(const CClientSocket& ss) {}
+	CClientSocket(const CClientSocket& ss) {
 		m_sock = ss.m_sock;
-		m_client = ss.m_client;
 	}
-	CServerSocket(){
+	CClientSocket() {
 		if (InitSockEnv() == FALSE) {
-			MessageBox(NULL, _T("无法初始化套接字环境,请检查网络设置！"), _T("初始化错误！"),MB_OK|MB_ICONERROR);
+			MessageBox(NULL, _T("无法初始化套接字环境,请检查网络设置！"), _T("初始化错误！"), MB_OK | MB_ICONERROR);
 			exit(0);
 		}
 		m_sock = socket(PF_INET, SOCK_STREAM, 0);
 	}
-	~CServerSocket(){
+	~CClientSocket() {
 		closesocket(m_sock);
 		WSACleanup();
 	}
@@ -209,25 +226,25 @@ private:
 	}
 	static void releaseInstance() {
 		if (m_instance != NULL) {
-			CServerSocket* tmp = m_instance;
+			CClientSocket* tmp = m_instance;
 			m_instance = NULL;
 			delete tmp;
 		}
 	}
-	static CServerSocket* m_instance;
+	static CClientSocket* m_instance;
 	class CHelper {
 	public:
 		CHelper() {
-			CServerSocket::getInstance();
+			CClientSocket::getInstance();
 		}
 		~CHelper() {
-			CServerSocket::releaseInstance();
+			CClientSocket::releaseInstance();
 		}
 	};
 
 	static CHelper m_helper;
-	
+
 };
 
 
-//extern CServerSocket server;
+//extern CClientSocket server;
