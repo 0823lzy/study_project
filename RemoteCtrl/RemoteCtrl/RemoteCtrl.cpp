@@ -8,6 +8,7 @@
 #include<direct.h>
 #include<list>
 #include<atlimage.h>
+#include"LockInfoDialog.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -260,6 +261,63 @@ int SendScreen() {
     screen.ReleaseDC();
     return 0;
 }
+CLockInfoDialog dlg;
+unsigned  threadid = 0;
+unsigned _stdcall threadLockDlg(void *args) {
+    TRACE("%s(%d):%d\r\n", __FUNCTION__,__LINE__,GetCurrentThreadId());//GetCurrentThreadId()获取线程id
+    dlg.Create(IDD_DIALOG_INFO, NULL);
+    dlg.ShowWindow(SW_SHOW);
+    CRect rect;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = GetSystemMetrics(SM_CXFULLSCREEN);//获取屏幕分辨率xy
+    rect.bottom = GetSystemMetrics(SM_CYFULLSCREEN) + 30;//设置窗口大小的参数
+    dlg.MoveWindow(rect);
+    //窗口置顶
+    dlg.SetWindowPos(&dlg.wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);//设置窗口为最前面的，不能修改大小，不能移动
+    //限制鼠标显示功能
+    ShowCursor(false);
+    ::ShowWindow(::FindWindow(_T("Shell_TrayWnd"), NULL), SW_HIDE);//把下面的任务栏隐藏起来
+    //限制鼠标的活动范围
+    dlg.GetWindowRect(rect);//获取窗口的范围
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = 1;
+    rect.bottom = 1;//将鼠标限制在一个点上
+    ClipCursor(rect);//把鼠标限制在窗口的位置
+    MSG msg;
+    //消息循环
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);//传递消息
+        DispatchMessage(&msg);//分配消息
+        if (msg.wParam == 0x1B || msg.wParam == 0x41) {//按下a或者esc退出
+            TRACE("msg:%08X wparam:%08X lparam:%08X\r\n", msg.message, msg.wParam, msg.lParam);
+            break;
+        }
+    }
+    
+    ShowCursor(true);
+    ::ShowWindow(::FindWindow(_T("Shell_TrayWnd"), NULL), SW_SHOW);//把任务栏显示起来
+    dlg.DestroyWindow();
+    _endthreadex(0);
+    return 0;
+}
+int LockMachine() {
+    if ((dlg.m_hWnd == NULL) || (dlg.m_hWnd == INVALID_HANDLE_VALUE)) {
+        _beginthreadex(NULL, 0, threadLockDlg, NULL, 0, &threadid);
+        TRACE("threadid=%d\r\n", threadid);
+    }
+    CPacket pack(7, NULL, 0);
+    CServerSocket::getInstance()->Send(pack);
+    return 0;
+}
+int UnlockMachine() {
+    //dlg.SendMessage(WM_KEYDOWN, 0x41,0x01E0001);
+    PostThreadMessage(threadid, WM_KEYDOWN, 0x41, 0);
+    CPacket pack(7, NULL, 0);
+    CServerSocket::getInstance()->Send(pack);
+    return 0;
+}
 int main()
 {
     int nRetCode = 0;
@@ -297,7 +355,8 @@ int main()
             //    int ret = pserver->DealCommand();
             //    //TODO:
             //}
-            int nCmd = 6;
+           
+            int nCmd = 7;
             switch (nCmd)
             {
             case 1://查看磁盘分区
@@ -318,9 +377,20 @@ int main()
             case 6://发送屏幕内容==>发送屏幕的截图
                 SendScreen();
                 break;
-            default:
+            case 7://锁机
+                LockMachine();
+                //Sleep(50);
+                //LockMachine();
+                break;
+            case 8://解锁
+                UnlockMachine();
                 break;
             }
+            Sleep(5000);
+            UnlockMachine();
+            //while ((dlg.m_hWnd != NULL) && (dlg.m_hWnd != INVALID_HANDLE_VALUE)) Sleep(100);
+            while (dlg.m_hWnd != NULL) Sleep(10);
+
         }
     }
     else
