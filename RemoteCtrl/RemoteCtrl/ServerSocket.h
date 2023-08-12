@@ -135,6 +135,7 @@ public:
 		sockaddr_in clntaddr;
 		int clntlen = sizeof(clntaddr);
 		m_client = accept(m_sock, (sockaddr*)&clntaddr, &clntlen);
+		TRACE("m_client =%d\r\n", m_client);
 		if (m_client == -1)return false;
 		return true;
 	}
@@ -142,11 +143,16 @@ public:
 	int  DealCommand() {
 		if (m_client == -1)return -1;
 		char* buffer = new char[BUFFER_SIZE];
+		if (buffer == NULL) {
+			TRACE("ÄÚ´æ²»×ã£¡£¡\r\n");
+			return -2;
+		}
 		memset(buffer, 0, BUFFER_SIZE);
 		size_t index = 0;
 		while (true) {
 			size_t len = recv(m_client, buffer+index, BUFFER_SIZE -(int)index, 0);
 			if (len <= 0) {
+				delete[]buffer;
 				return -1;
 			}
 			index += len;
@@ -155,6 +161,7 @@ public:
 			if (len > 0) {
 				memmove(buffer, buffer + len, BUFFER_SIZE - len);
 				index -= len;
+				delete[]buffer;
 				return m_packet.sCmd;
 			}
 		}
@@ -181,6 +188,13 @@ public:
 			return TRUE;
 		}
 		return false;
+	}
+	CPacket& GetPacket() {
+		return m_packet;
+	}
+	void CloseClient() {
+		closesocket(m_client);
+		m_client = INVALID_SOCKET;
 	}
 private:
 	SOCKET m_sock;
