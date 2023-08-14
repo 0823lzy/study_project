@@ -123,15 +123,15 @@ public:
 		}
 		return m_instance;
 	}
-	bool InitSocket(const std::string&strIPAddress) {
+	bool InitSocket(DWORD nIP,int nPort) {
 		if (m_sock != INVALID_SOCKET)CloseSocket(); 
 		m_sock = socket(PF_INET, SOCK_STREAM, 0);
 		if (m_sock == -1) return false;
 		sockaddr_in servaddr;
 		memset(&servaddr, 0, sizeof(servaddr));
 		servaddr.sin_family = AF_INET;
-		servaddr.sin_addr.s_addr = inet_addr(strIPAddress.c_str());
-		servaddr.sin_port = htons(9527);
+		servaddr.sin_addr.s_addr = htonl(nIP);
+		servaddr.sin_port = htons(nPort);
 		if (servaddr.sin_addr.s_addr == INADDR_NONE) {
 			AfxMessageBox("指定的ip地址不存在！");
 			return false;
