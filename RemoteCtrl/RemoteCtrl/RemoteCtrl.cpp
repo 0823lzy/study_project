@@ -44,18 +44,7 @@ int MakeDriverInfo() {//1==>A 2==>B 3==>C 1 2 是软盘，，其中一直可以�
     return 0;
 }
 #include<io.h>
-typedef struct file_info{
-    file_info() {
-        IsInvalid = FALSE;
-        IsDirectory = -1;
-        HasNext = TRUE;
-        memset(szFileName, 0, sizeof(szFileName));
-    }
-    BOOL IsInvalid;//是否无效
-    BOOL IsDirectory;//是否为目录，否就是0，是就是1
-    BOOL HasNext;//是否还有后续，0没有 1有
-    char szFileName[256];//文件名
-}FILEINFO,*PFILEINFO;
+
 int MakeDirectoryInfo() {
     std::string strPath;
     //std::list<FILEINFO> lstFileInfos;
@@ -64,35 +53,37 @@ int MakeDirectoryInfo() {
         return -1;
     }
     if (_chdir(strPath.c_str()) != 0) {
-        FILEINFO finfo;
-        finfo.IsInvalid = TRUE;
-        finfo.IsDirectory = TRUE;
+        FILEINFO finfo; 
         finfo.HasNext = FALSE;
-        memcpy(finfo.szFileName, strPath.c_str(), strPath.size());
         CPacket pack(2, (BYTE*)&finfo, sizeof(finfo));
-        if (CServerSocket::getInstance()->Send(pack) == FALSE) OutputDebugString(_T("发送失败，客户端连接失败或者发送数据失败!!"));
+        CServerSocket::getInstance()->Send(pack);
         //lstFileInfos.push_back(finfo);
         OutputDebugString(_T("没有权限访问目录！"));
         return -2;
     }
     _finddata_t fdata;
-    int hfind = 0;
-    if ((hfind =(int) _findfirst("*", &fdata)) == -1) {
+    intptr_t hfind = 0;
+    if ((hfind = _findfirst("*", &fdata)) == -1) {
         OutputDebugString(_T("没有找到任何文件!!"));
+        FILEINFO finfo;
+        finfo.HasNext = FALSE;
+        CPacket pack(2, (BYTE*)&finfo, sizeof(finfo));
+        CServerSocket::getInstance()->Send(pack);
         return -3;
     }
     do {
         FILEINFO finfo;
         finfo.IsDirectory = (fdata.attrib & _A_SUBDIR) != 0;
         memcpy(finfo.szFileName, fdata.name, strlen(fdata.name));
+        TRACE("%s\r\n", finfo.szFileName);
         CPacket pack(2, (BYTE*)&finfo, sizeof(finfo));
-        if(CServerSocket::getInstance()->Send(pack)==FALSE) OutputDebugString(_T("发送失败，客户端连接失败或者发送数据失败!!"));
+        CServerSocket::getInstance()->Send(pack);
         //lstFileInfos.push_back(finfo);
     } while (!_findnext(hfind, &fdata));
     FILEINFO finfo;
     finfo.HasNext = FALSE;
     CPacket pack(2, (BYTE*)&finfo, sizeof(finfo));
-    if (CServerSocket::getInstance()->Send(pack) == FALSE) OutputDebugString(_T("发送失败，客户端连接失败或者发送数据失败!!"));
+    CServerSocket::getInstance()->Send(pack);
     return 0;
 }
 int RunFile() {
@@ -319,7 +310,7 @@ int UnlockMachine() {
     return 0;
 }
 int TestConnect() {
-    CPacket pack(1981, NULL, 0);
+    CPacket pack(1998, NULL, 0);
     CServerSocket::getInstance()->Send(pack);
     return 0;
 }
@@ -351,7 +342,7 @@ int ExcuteCommand(int nCmd) {
     case 8://解锁
         ret = UnlockMachine();
         break;
-    case 1981:
+    case 1998:
         ret = TestConnect();
         break;
     }

@@ -1,0 +1,115 @@
+﻿  ClientSocket.cpp
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [21]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,18): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [21]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,18): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : 尝试匹配参数列表“(const char [21])”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [11]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,18): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [11]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,18): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : 尝试匹配参数列表“(const char [11])”时
+  RemoteClient.cpp
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [21]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,18): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [21]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,18): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : 尝试匹配参数列表“(const char [21])”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [11]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,18): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [11]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,18): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : 尝试匹配参数列表“(const char [11])”时
+  RemoteClientDlg.cpp
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [21]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,18): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [21]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,18): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(148,4): message : 尝试匹配参数列表“(const char [21])”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [11]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,18): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [11]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,18): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(153,4): message : 尝试匹配参数列表“(const char [11])”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(73,51): error C2664: “int atoi(const char *)”: 无法将参数 1 从“LPCTSTR”转换为“const char *”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(73,56): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stdlib.h(451,62): message : 参见“atoi”的声明
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(73,51): message : 尝试匹配参数列表“(LPCTSTR)”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(73,20): error C2660: “CClientSocket::InitSocket”: 函数不接受 1 个参数
+E:\study_project\study_project\RemoteCtrl\RemoteClient\ClientSocket.h(138,7): message : 参见“CClientSocket::InitSocket”的声明
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(73,20): message : 尝试匹配参数列表“(DWORD)”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(75,3): error C2665: “AfxMessageBox”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6549,12): message : 可能是“int AfxMessageBox(UINT,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(75,3): message : “int AfxMessageBox(UINT,UINT,UINT)”: 无法将参数 1 从“const char [17]”转换为“UINT”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(75,17): message : 没有使该转换得以执行的上下文
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxwin.h(6547,12): message : 或    “int AfxMessageBox(LPCTSTR,UINT,UINT)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(75,3): message : “int AfxMessageBox(LPCTSTR,UINT,UINT)”: 无法将参数 1 从“const char [17]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(75,17): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(75,3): message : 尝试匹配参数列表“(const char [17])”时
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(225,27): error C2665: “CTreeCtrl::InsertItem”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxcmn.h(923,12): message : 可能是“HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,int,int,HTREEITEM,HTREEITEM)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(225,27): message : “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,int,int,HTREEITEM,HTREEITEM)”: 无法将参数 1 从“const _Elem *”转换为“LPCTSTR”
+          with
+          [
+              _Elem=char
+          ]
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(225,47): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxcmn.h(921,12): message : 或    “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,HTREEITEM,HTREEITEM)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(225,27): message : “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,HTREEITEM,HTREEITEM)”: 无法将参数 1 从“const _Elem *”转换为“LPCTSTR”
+          with
+          [
+              _Elem=char
+          ]
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(225,47): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(225,27): message : 尝试匹配参数列表“(const _Elem *, HTREEITEM, HTREEITEM)”时
+          with
+          [
+              _Elem=char
+          ]
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(233,28): error C2665: “CTreeCtrl::InsertItem”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxcmn.h(923,12): message : 可能是“HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,int,int,HTREEITEM,HTREEITEM)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(233,28): message : “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,int,int,HTREEITEM,HTREEITEM)”: 无法将参数 1 从“const _Elem *”转换为“LPCTSTR”
+          with
+          [
+              _Elem=char
+          ]
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(233,48): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxcmn.h(921,12): message : 或    “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,HTREEITEM,HTREEITEM)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(233,28): message : “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,HTREEITEM,HTREEITEM)”: 无法将参数 1 从“const _Elem *”转换为“LPCTSTR”
+          with
+          [
+              _Elem=char
+          ]
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(233,48): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(233,28): message : 尝试匹配参数列表“(const _Elem *, HTREEITEM, HTREEITEM)”时
+          with
+          [
+              _Elem=char
+          ]
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(285,26): error C2665: “CTreeCtrl::InsertItem”: 没有重载函数可以转换所有参数类型
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxcmn.h(923,12): message : 可能是“HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,int,int,HTREEITEM,HTREEITEM)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(285,26): message : “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,int,int,HTREEITEM,HTREEITEM)”: 无法将参数 1 从“char [256]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(285,43): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\atlmfc\include\afxcmn.h(921,12): message : 或    “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,HTREEITEM,HTREEITEM)”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(285,26): message : “HTREEITEM CTreeCtrl::InsertItem(LPCTSTR,HTREEITEM,HTREEITEM)”: 无法将参数 1 从“char [256]”转换为“LPCTSTR”
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(285,43): message : 指向的类型不相关; 转换需要 reinterpret_cast、C 样式强制转换或带圆括号的函数样式强制转换
+E:\study_project\study_project\RemoteCtrl\RemoteClient\RemoteClientDlg.cpp(285,26): message : 尝试匹配参数列表“(char [256], HTREEITEM, HTREEITEM)”时
+  正在生成代码...

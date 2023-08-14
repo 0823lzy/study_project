@@ -112,6 +112,18 @@ typedef struct MouseEvent {//关于鼠标一系列行为的结构体
 	POINT ptXY;//坐标
 }MOUSEEV, * PMOUSEEV;
 
+typedef struct file_info {
+	file_info() {
+		IsInvalid = FALSE;
+		IsDirectory = -1;
+		HasNext = TRUE;
+		memset(szFileName, 0, sizeof(szFileName));
+	}
+	BOOL IsInvalid;//是否无效
+	BOOL IsDirectory;//是否为目录，否就是0，是就是1
+	BOOL HasNext;//是否还有后续，0没有 1有
+	char szFileName[256];//文件名
+}FILEINFO, * PFILEINFO;
 std::string GetErrInfo(int wsaErrCode);//错误信息返回函数
 
 class CClientSocket
