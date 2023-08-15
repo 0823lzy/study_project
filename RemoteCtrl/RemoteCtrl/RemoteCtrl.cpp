@@ -102,25 +102,26 @@ int DownloadFile() {
     errno_t err=fopen_s(&pFile,strPath.c_str(), "rb");
     if ( (err!=0) || (pFile==NULL) ) {
         CPacket pack(4, (BYTE*)&data, 8);
-        if (CServerSocket::getInstance()->Send(pack) == FALSE) OutputDebugString(_T("发送失败，客户端连接失败或者发送数据失败!!"));
+        CServerSocket::getInstance()->Send(pack);
         return -1;
     }
     if (pFile != NULL) {
         fseek(pFile, 0, SEEK_END);//将文件指针指向末尾，
         data = _ftelli64(pFile);//读取文件指针的位置，即因为文件指针在末尾，获取文件内容的长度
         CPacket head(4, (BYTE*)&data, 8);
+        CServerSocket::getInstance()->Send(head);
         fseek(pFile, 0, SEEK_SET);
         char buffer[1024] = "";
         size_t rlen = 0;
         do {
             rlen = fread(buffer, 1, 1024, pFile);
             CPacket pack(4, (BYTE*)buffer, rlen);
-            if (CServerSocket::getInstance()->Send(pack) == FALSE) OutputDebugString(_T("发送失败，客户端连接失败或者发送数据失败!!"));
+            CServerSocket::getInstance()->Send(pack);
         } while (rlen >= 1024);
         fclose(pFile);
     }
     CPacket pack(4, NULL, 0);
-    if (CServerSocket::getInstance()->Send(pack) == FALSE) OutputDebugString(_T("发送失败，客户端连接失败或者发送数据失败!!"));
+    CServerSocket::getInstance()->Send(pack);
     return 0;
 }
 int MouseEvent() {
