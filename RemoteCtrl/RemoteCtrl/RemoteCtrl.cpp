@@ -19,17 +19,17 @@
 CWinApp theApp;
 
 using namespace std;
-void Dump(BYTE*pData,size_t nsize) {
-    std::string strOut;
-    for (size_t i = 0; i < nsize; i++) {
-        char buf[8] = "";
-        if (i > 0 && (i % 16 == 0)) strOut += "\n";
-        snprintf(buf, sizeof(buf), "%02X", pData[i] & 0xFF);
-        strOut += buf;
-    }
-    strOut += "\n";
-    OutputDebugStringA(strOut.c_str());
-}
+//void Dump(BYTE*pData,size_t nsize) {
+//    std::string strOut;
+//    for (size_t i = 0; i < nsize; i++) {
+//        char buf[8] = "";
+//        if (i > 0 && (i % 16 == 0)) strOut += "\n";
+//        snprintf(buf, sizeof(buf), "%02X", pData[i] & 0xFF);
+//        strOut += buf;
+//    }
+//    strOut += "\n";
+//    OutputDebugStringA(strOut.c_str());
+//}
 int MakeDriverInfo() {//1==>A 2==>B 3==>C 1 2 是软盘，，其中一直可以到26的编号就是Z盘
     std::string result;
     for (int i = 1; i <= 26; i++) {
@@ -39,7 +39,7 @@ int MakeDriverInfo() {//1==>A 2==>B 3==>C 1 2 是软盘，，其中一直可以�
         }  
     }
     CPacket pack(1, (BYTE*)result.c_str(), result.size());//打包用的
-    Dump((BYTE*)pack.Data(), pack.Size());
+    //Dump((BYTE*)pack.Data(), pack.Size());
     CServerSocket::getInstance()->Send(pack);
     return 0;
 }
