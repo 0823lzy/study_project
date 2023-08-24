@@ -338,7 +338,7 @@ void CRemoteClientDlg::threadWatchData()
 	//ULONGLONG tick = GetTickCount64();
 	for (;;) {
 		if (m_isFull == false) {//更新数据到缓存
-			int ret = SendMessage(WM_SEND_PACKET, 6 << 1 | 1);
+			LRESULT ret = SendMessage(WM_SEND_PACKET, 6 << 1 | 1);
 			if (ret == 6) {
 				BYTE* pData = (BYTE*)pClient->GetPacket().strData.c_str();
 				//GlobalAlloc函数用于从全局堆中分配一块内存
@@ -392,7 +392,7 @@ void CRemoteClientDlg::threadDownFile()
 		CClientSocket* pClient = CClientSocket::getInstance();
 		do {
 			//int ret = SendCommandPacket(4, false, (BYTE*)LPCSTR(strFile), strFile.GetLength());
-			int ret = SendMessage(WM_SEND_PACKET, 4 << 1 | 0, (LPARAM)(LPCSTR)strFile);//子线程发信息给主线程
+			LRESULT ret = SendMessage(WM_SEND_PACKET, 4 << 1 | 0, (LPARAM)(LPCSTR)strFile);//子线程发信息给主线程
 			if (ret < 0) {
 				AfxMessageBox("执行下载命令失败！！");
 				TRACE("执行下载失败，ret=%d\r\n", ret);
