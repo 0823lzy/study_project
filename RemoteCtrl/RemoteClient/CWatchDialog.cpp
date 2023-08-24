@@ -24,6 +24,7 @@ CWatchDialog::~CWatchDialog()
 void CWatchDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_WATCH, m_picture);
 }
 
 
@@ -49,8 +50,25 @@ void CWatchDialog::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	if (nIDEvent == 0) {
-		CRemoteClientDlg* pParent = (CRemoteClientDlg*)GetParent();
+		CRemoteClientDlg* pParent = (CRemoteClientDlg*)GetParent();//得到父类对象
 		if (pParent->isFull()) {
+			CRect rect;
+			m_picture.GetWindowRect(rect);//获取目标的大小，输入到rect里
+			//BitBlt是一个Windows API函数，
+			// 用于在设备上执行位块传输（Bit-block Transfer，简称BitBlt）
+			// 它允许在不同的设备上进行图像数据的传输、复制、拉伸、反转等操作
+			//得到图像，第一个参数目标设备的句柄,后两个为左上角xy坐标,最后一个参数为操作的类型
+			//pParent->GetImage().BitBlt(m_picture.GetDC()->GetSafeHdc(), 0, 0, SRCCOPY);
+			
+			//缩放到目标图像里
+			pParent->GetImage().StretchBlt(
+				m_picture.GetDC()->GetSafeHdc(), 0, 0,
+				rect.Width(),
+				rect.Height(),
+				SRCCOPY);
+			m_picture.InvalidateRect(NULL);//通知进行重绘
+			pParent->GetImage().Destroy();//销毁
+			pParent->SetImageStatus();//初始化缓存数据为false
 
 		}
 	}

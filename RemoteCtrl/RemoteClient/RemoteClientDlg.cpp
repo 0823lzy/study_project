@@ -328,43 +328,43 @@ void CRemoteClientDlg::threadEntryForWatchData(void* arg)
 }
 void CRemoteClientDlg::threadWatchData()
 {
+	Sleep(50);
 	CClientSocket* pClient = NULL;
 	do {
 		pClient = CClientSocket::getInstance();
 	} while (pClient == NULL);
+	//用于获取自系统启动以来经过的毫秒数。它返回一个无符号32位整数，
+	//表示从系统启动到当前时刻所经过的毫秒数。
+	//ULONGLONG tick = GetTickCount64();
 	for (;;) {
-		CPacket pack(6, NULL, 0);
-		bool ret = pClient->Send(pack);
-		if (ret) {
-			int cmd = pClient->DealCommand();
-			if (cmd == 6) {
-				if (m_isFull == false) {//更新数据到缓存
-					BYTE* pData = (BYTE*)pClient->GetPacket().strData.c_str();
-					//GlobalAlloc函数用于从全局堆中分配一块内存
-					HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, 0);//分配一个全局的内存
-					if (hMem == NULL) {
-						TRACE("内存不足了！");
-						Sleep(1);
-						continue;
-					}
-					IStream* pStream = NULL;//创建一个流
-					//CreateStreamOnHGlobal 是一个函数，它可以将全局内存块转换为可用于操作数据的流接口。
-					HRESULT hRet= CreateStreamOnHGlobal(hMem, true, &pStream);//将全局内存转换为流
-					if (hRet ==S_OK) {
-						ULONG length = 0;
-						//Write写入流中，pdata指向要写入流中的数据缓冲区的指针，size是写入字节数，length实际写入字节数
-						pStream->Write(pData, pClient->GetPacket().strData.size(), &length);
-						LARGE_INTEGER bg = { 0 };
-						pStream->Seek(bg, STREAM_SEEK_SET, NULL);//seek到流的开头
-						m_image.Load(pStream);//把流load到缓存中
-						m_isFull = true;
-					}
+		if (m_isFull == false) {//更新数据到缓存
+			int ret = SendMessage(WM_SEND_PACKET, 6 << 1 | 1);
+			if (ret == 6) {
+				BYTE* pData = (BYTE*)pClient->GetPacket().strData.c_str();
+				//GlobalAlloc函数用于从全局堆中分配一块内存
+				HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, 0);//分配一个全局的内存
+				if (hMem == NULL) {
+					TRACE("内存不足了！");
+					Sleep(1);
+					continue;
+				}
+				IStream* pStream = NULL;//创建一个流
+				//CreateStreamOnHGlobal 是一个函数，它可以将全局内存块转换为可用于操作数据的流接口。
+				HRESULT hRet = CreateStreamOnHGlobal(hMem, true, &pStream);//将全局内存转换为流
+				if (hRet == S_OK) {
+					ULONG length = 0;
+					//Write写入流中，pdata指向要写入流中的数据缓冲区的指针，size是写入字节数，length实际写入字节数
+					pStream->Write(pData, pClient->GetPacket().strData.size(), &length);
+					LARGE_INTEGER bg = { 0 };
+					pStream->Seek(bg, STREAM_SEEK_SET, NULL);//seek到流的开头
+					m_image.Load(pStream);//把流load到缓存中
+					m_isFull = true;
 				}
 			}
+			else Sleep(1);
 		}
-		else {
-			Sleep(1);
-		}
+		else Sleep(1);
+			
 	}
 }
 void CRemoteClientDlg::threadEntryDownFile(void* arg)
@@ -509,16 +509,33 @@ void CRemoteClientDlg::OnRunFile()
 
 LRESULT CRemoteClientDlg::OnSendPacket(WPARAM wParam, LPARAM lParam)
 {//实现消息响应函数 第四步
-	CString strFile = (LPCSTR)lParam;
-	int ret = SendCommandPacket(wParam>>1, wParam&1, (BYTE*)(LPCSTR)strFile, strFile.GetLength());
+	int ret = 0;
+	int cmd = wParam >> 1;
+	switch(cmd) {
+	case 4:
+		{
+			CString strFile = (LPCSTR)lParam;
+			ret = SendCommandPacket(cmd, wParam & 1, (BYTE*)(LPCSTR)strFile, strFile.GetLength());
+		}
+		break;
+	case 6:
+		{
+			ret = SendCommandPacket(cmd, wParam & 1);
+		}
+		break;
+	default:
+		ret = -1;
+	}
+
+	
 	return ret;
 }
 
 
 void CRemoteClientDlg::OnBnClickedBtnStartWatch()
 {
-	_beginthread(CRemoteClientDlg::threadEntryForWatchData, 0, this);
 	CWatchDialog dlg(this);//传递this
+	_beginthread(CRemoteClientDlg::threadEntryForWatchData, 0, this);
 	dlg.DoModal();//模态对话框
 }
 
