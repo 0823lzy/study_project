@@ -195,6 +195,8 @@ void CWatchDialog::OnMouseMove(UINT nFlags, CPoint point)
 	event.ptXY = remote;
 	event.nButton = 8;//没有按键
 	event.nAction = 0;//双击
+
+	//TODO:存在一个设计隐患，网络通信和对话框有耦合
 	CRemoteClientDlg* pParent = (CRemoteClientDlg*)GetParent();
 	pParent->SendMessage(WM_SEND_PACKET, 5 << 1 | 1, (WPARAM) & event);
 	CDialog::OnMouseMove(nFlags, point);
