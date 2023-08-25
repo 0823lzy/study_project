@@ -263,8 +263,18 @@ unsigned _stdcall threadLockDlg(void *args) {
     rect.left = 0;
     rect.top = 0;
     rect.right = GetSystemMetrics(SM_CXFULLSCREEN);//获取屏幕分辨率xy
-    rect.bottom = GetSystemMetrics(SM_CYFULLSCREEN) + 30;//设置窗口大小的参数
+    rect.bottom = GetSystemMetrics(SM_CYFULLSCREEN) + 100;//设置窗口大小的参数
     dlg.MoveWindow(rect);
+    CWnd* pText = dlg.GetDlgItem(IDC_STATIC);//拿到锁机文字窗口
+    if (pText != NULL) {
+        CRect rtText;
+        pText->GetWindowRect(rtText);
+        int nWidth = rtText.Width();//得出锁机文字内容的宽度
+        int x = (rect.right - nWidth) / 2;
+        int nHeight = rtText.Height();//文字高度
+        int y = (rect.bottom - nHeight) / 2;
+        pText->MoveWindow(x, y, rtText.Width(), rtText.Height());//将文字移动到中间位置
+    }
     //窗口置顶
     dlg.SetWindowPos(&dlg.wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);//设置窗口为最前面的，不能修改大小，不能移动
     //限制鼠标显示功能
@@ -287,8 +297,8 @@ unsigned _stdcall threadLockDlg(void *args) {
             break;
         }
     }
-    
-    ShowCursor(true);
+    ClipCursor(NULL);//恢复鼠标的限制位置
+    ShowCursor(true);//恢复鼠标
     ::ShowWindow(::FindWindow(_T("Shell_TrayWnd"), NULL), SW_SHOW);//把任务栏显示起来
     dlg.DestroyWindow();
     _endthreadex(0);
@@ -306,7 +316,7 @@ int LockMachine() {
 int UnlockMachine() {
     //dlg.SendMessage(WM_KEYDOWN, 0x41,0x01E0001);
     PostThreadMessage(threadid, WM_KEYDOWN, 0x41, 0);
-    CPacket pack(7, NULL, 0);
+    CPacket pack(8, NULL, 0);
     CServerSocket::getInstance()->Send(pack);
     return 0;
 }
