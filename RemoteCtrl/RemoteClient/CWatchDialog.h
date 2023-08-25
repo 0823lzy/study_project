@@ -16,7 +16,9 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DLG_WATCH };
 #endif
-
+public:
+	int m_nObjWidth;
+	int m_nObjHeight;
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 

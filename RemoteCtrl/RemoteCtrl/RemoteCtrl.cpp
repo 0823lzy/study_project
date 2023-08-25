@@ -224,7 +224,7 @@ int SendScreen() {
     screen.Create(nWidth, nHeight, nBitPerPixel);//创建图像
 
     //BitBlt函数将hScreen的位图数据按照指定的方式传输到screen上。
-    BitBlt(screen.GetDC(), 0, 0, 1920, 1020, hScreen, 0, 0, SRCCOPY);//复制图像
+    BitBlt(screen.GetDC(), 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);//复制图像
     ReleaseDC(NULL, hScreen);//释放
 
     //GlobalAlloc 是一个 Windows API 函数，用于在全局堆（Global Heap）中分配指定大小的内存块。它返回一个全局内存块的句柄。

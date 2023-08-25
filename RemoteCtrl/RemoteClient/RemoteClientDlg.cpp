@@ -139,7 +139,7 @@ BOOL CRemoteClientDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	UpdateData();
-	m_server_address = 0x7F000001;
+	m_server_address = 0xC0A8C081;//192.168.192.129
 	m_nPort = _T("9527");
 	UpdateData(false);
 	m_dlgStatus.Create(IDD_DIALOG_STATUS,this);
@@ -327,7 +327,7 @@ void CRemoteClientDlg::threadEntryForWatchData(void* arg)
 	_endthread();
 }
 void CRemoteClientDlg::threadWatchData()
-{
+{//可能存在异步问题导致程序崩溃
 	Sleep(50);
 	CClientSocket* pClient = NULL;
 	do {
@@ -336,7 +336,7 @@ void CRemoteClientDlg::threadWatchData()
 	//用于获取自系统启动以来经过的毫秒数。它返回一个无符号32位整数，
 	//表示从系统启动到当前时刻所经过的毫秒数。
 	//ULONGLONG tick = GetTickCount64();
-	for (;;) {
+	while (!m_isclosed) {
 		if (m_isFull == false) {//更新数据到缓存
 			LRESULT ret = SendMessage(WM_SEND_PACKET, 6 << 1 | 1);
 			if (ret == 6) {
@@ -357,6 +357,7 @@ void CRemoteClientDlg::threadWatchData()
 					pStream->Write(pData, pClient->GetPacket().strData.size(), &length);
 					LARGE_INTEGER bg = { 0 };
 					pStream->Seek(bg, STREAM_SEEK_SET, NULL);//seek到流的开头
+					if((HBITMAP)m_image!=NULL) m_image.Destroy();
 					m_image.Load(pStream);//把流load到缓存中
 					m_isFull = true;
 				}
@@ -536,9 +537,12 @@ LRESULT CRemoteClientDlg::OnSendPacket(WPARAM wParam, LPARAM lParam)
 
 void CRemoteClientDlg::OnBnClickedBtnStartWatch()
 {
+	m_isclosed = false;
 	CWatchDialog dlg(this);//传递this
-	_beginthread(CRemoteClientDlg::threadEntryForWatchData, 0, this);
+	HANDLE hTread=(HANDLE)_beginthread(CRemoteClientDlg::threadEntryForWatchData, 0, this);
 	dlg.DoModal();//模态对话框
+	m_isclosed = true;
+	WaitForSingleObject(hTread, 500);
 }
 
 
